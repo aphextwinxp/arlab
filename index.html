@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AR зертханалық жұмыс 12 — Күн жүйесі</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+  <script>
+    // Маркер табылғанда/жоғалғанда жазуды ауыстырады
+    AFRAME.registerComponent('marker-status', {
+      init: function () {
+        const status = document.getElementById('status');
+        this.el.addEventListener('markerFound', () => {
+          status.textContent = 'Маркер табылды: Күн жүйесі';
+        });
+        this.el.addEventListener('markerLost', () => {
+          status.textContent = 'Маркерді камераға көрсетіңіз';
+        });
+      }
+    });
+
+    // Нысанға басқанда түсін өзгертеді (қосымша тапсырма)
+    AFRAME.registerComponent('color-on-click', {
+      init: function () {
+        const colors = ['#ffb703', '#fb5607', '#8338ec', '#06d6a0'];
+        let i = 0;
+        this.el.addEventListener('click', () => {
+          i = (i + 1) % colors.length;
+          this.el.setAttribute('color', colors[i]);
+        });
+      }
+    });
+  </script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+  <div id="status" style="position: fixed; top: 10px; left: 10px; z-index: 10;
+       padding: 6px 12px; background: rgba(0,0,0,0.6); color: #fff;
+       font-family: sans-serif; border-radius: 6px;">
+    Маркерді камераға көрсетіңіз
+  </div>
+
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;"
+           cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+
+    <!-- Өз маркерім (pattern) -->
+    <a-marker type="pattern" url="markers/pattern-mymarker.patt" marker-status>
+
+      <!-- Күн -->
+      <a-sphere class="clickable" color-on-click position="0 0.4 0" radius="0.2" color="#ffb703"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear"></a-sphere>
+      <a-text value="Sun / Kun" position="0 0.8 0" align="center" color="#000" width="2"></a-text>
+
+      <!-- Меркурий: орбита + өз білігінде айналу -->
+      <a-entity position="0 0.4 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear">
+        <a-sphere position="0.45 0 0" radius="0.05" color="#9e9e9e"
+                  animation="property: rotation; to: 0 360 0; loop: true; dur: 1500; easing: linear"></a-sphere>
+      </a-entity>
+
+      <!-- Шолпан -->
+      <a-entity position="0 0.4 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear">
+        <a-sphere position="0.62 0 0" radius="0.07" color="#e9b872"
+                  animation="property: rotation; to: 0 360 0; loop: true; dur: 2000; easing: linear"></a-sphere>
+      </a-entity>
+
+      <!-- Жер -->
+      <a-entity position="0 0.4 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 7000; easing: linear">
+        <a-sphere position="0.8 0 0" radius="0.08" color="#1d7dd7"
+                  animation="property: rotation; to: 0 360 0; loop: true; dur: 2500; easing: linear"></a-sphere>
+      </a-entity>
+
+      <!-- Марс -->
+      <a-entity position="0 0.4 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
+        <a-sphere position="0.98 0 0" radius="0.06" color="#d1495b"
+                  animation="property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear"></a-sphere>
+      </a-entity>
+    </a-marker>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
+</html>
